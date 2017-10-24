@@ -19,3 +19,7 @@ Branch of the staking with first person view interaction. Bachelor thesis of Dav
  * ```Plugins``` are added as submodules.
 
 ```git submodule update --init --recursive```
+
+# Engine Version
+
+4.17
