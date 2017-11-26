@@ -8,12 +8,9 @@ public class RobCoG : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] {
-			"HeadMountedDisplay",
-			"SteamVR"
-			});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject",
+		    "Engine", "InputCore","UROSBridge","URoboVision",
+		    "Json","JsonUtilities",});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

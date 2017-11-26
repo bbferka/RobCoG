@@ -1,13 +1,22 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.18",
+	"EngineAssociation": "{1B9A7A2F-330B-1102-0013-03696C95EEEA}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "RobCoG",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "CodeView",
+			"Enabled": true
 		}
 	]
 }
