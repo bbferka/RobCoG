@@ -6,6 +6,7 @@
 
 #include "GameFramework/Actor.h"
 #include "Engine.h"
+//#include "EditorEngine.h"
 #include "CoreMinimal.h"
 #include "ROSBridgeHandler.h"
 #include "ROSBridgePublisher.h"

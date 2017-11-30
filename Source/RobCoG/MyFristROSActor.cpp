@@ -18,7 +18,7 @@ void AMyFristROSActor::BeginPlay()
   Super::BeginPlay();
 
   UE_LOG(LogTemp, Log, TEXT("[ARobCoGGameModeBase::BeginPlay()]"));
-  Handler = MakeShareable<FROSBridgeHandler>(new FROSBridgeHandler(TEXT("127.0.0.1"), 9090));
+  Handler = MakeShareable<FROSBridgeHandler>(new FROSBridgeHandler(TEXT("192.168.102.60"), 9090));
 
   AddNewObjectServiceServer =
     MakeShareable<FROSUpdateRGBDActorPositionServer>(new FROSUpdateRGBDActorPositionServer(TEXT("update_objects")));
@@ -57,11 +57,12 @@ void AMyFristROSActor::Tick(float DeltaTime)
       poseStamped.SetHeader(posePair.Value.GetHeader());
       poseStamped.SetPose(posePair.Value.GetPose());
       UE_LOG(LogTemp, Log, TEXT("Found actor with given name. Moving it"));
-      FVector trans(-poseStamped.GetPose().GetPosition().GetX() * 100-260,
-                    poseStamped.GetPose().GetPosition().GetY() * 100+80,
+      FVector trans(-poseStamped.GetPose().GetPosition().GetX() * 100 - 270,
+                    poseStamped.GetPose().GetPosition().GetY() * 100 + 60,
                     poseStamped.GetPose().GetPosition().GetZ() * 100);
-      FQuat quat(poseStamped.GetPose().GetOrientation().GetX(), -poseStamped.GetPose().GetOrientation().GetY(),
-                 poseStamped.GetPose().GetOrientation().GetZ(), -poseStamped.GetPose().GetOrientation().GetW());
+
+      FQuat quat(poseStamped.GetPose().GetOrientation().GetX(), poseStamped.GetPose().GetOrientation().GetY(),
+                 poseStamped.GetPose().GetOrientation().GetZ(), poseStamped.GetPose().GetOrientation().GetW());
       ActorItr->SetActorLocationAndRotation(trans, quat);
     }
   }
@@ -83,16 +84,24 @@ void AMyFristROSActor::Tick(float DeltaTime)
         UE_LOG(LogTemp, Log, TEXT("Marker Mesh: %s"), *meshResource);
         UE_LOG(LogTemp, Log, TEXT("Found actor with given name [%s]"), *actorName);
         FROSBridgeMsgGeometrymsgsPose pose = marker.GetPose();
-        FVector trans(-pose.GetPosition().GetX() * 100 - 260,
-                      pose.GetPosition().GetY() * 100 + 80,
-                      pose.GetPosition().GetZ() * 100);
-        UE_LOG(LogTemp, Log, TEXT("Marker trans: %f %f %f"), trans[0],trans[1],trans[2]);
-        FQuat quat(pose.GetOrientation().GetX(), -pose.GetOrientation().GetY(),
-                   pose.GetOrientation().GetZ(), -pose.GetOrientation().GetW());
-        FTransform transf(quat,trans);
-        ActorItr->SetActorLocationAndRotation(trans,quat);
+                FVector trans(-pose.GetPosition().GetX() * 100 - 260,
+                              pose.GetPosition().GetY() * 100 + 70,
+                              pose.GetPosition().GetZ() * 100);
+                FQuat quat(pose.GetOrientation().GetX(), -pose.GetOrientation().GetY(),
+                           pose.GetOrientation().GetZ(), -pose.GetOrientation().GetW());
+
+//        FVector trans(pose.GetPosition().GetX() * 100,
+//                      pose.GetPosition().GetY() * 100,
+//                      pose.GetPosition().GetZ() * 100);
+//        FQuat quat(pose.GetOrientation().GetX(), pose.GetOrientation().GetY(),
+//                   pose.GetOrientation().GetZ(), pose.GetOrientation().GetW());
+
+
+        UE_LOG(LogTemp, Log, TEXT("Marker trans: %f %f %f"), trans[0], trans[1], trans[2]);
+        ActorItr->SetActorLocationAndRotation(trans, quat);
         ActorItr->SetActorHiddenInGame(false);
       }
+
     }
   }
   UpdateComponentTransforms();
