@@ -18,7 +18,7 @@ void AMyFristROSActor::BeginPlay()
   Super::BeginPlay();
 
   UE_LOG(LogTemp, Log, TEXT("[ARobCoGGameModeBase::BeginPlay()]"));
-  Handler = MakeShareable<FROSBridgeHandler>(new FROSBridgeHandler(TEXT("192.168.102.60"), 9090));
+  Handler = MakeShareable<FROSBridgeHandler>(new FROSBridgeHandler(TEXT("192.168.100.199"), 9090));
 
   AddNewObjectServiceServer =
     MakeShareable<FROSUpdateRGBDActorPositionServer>(new FROSUpdateRGBDActorPositionServer(TEXT("update_objects")));
@@ -33,6 +33,8 @@ void AMyFristROSActor::BeginPlay()
   UE_LOG(LogTemp, Log, TEXT("[ARobCoGGameModeBase::BeginPlay()] Websocket server connected."));
 
 }
+
+
 
 // Called every frame
 void AMyFristROSActor::Tick(float DeltaTime)
@@ -49,8 +51,8 @@ void AMyFristROSActor::Tick(float DeltaTime)
   //see if camera needs moving;
   if(AddNewObjectServiceServer->message_queue.Dequeue(posePair))
   {
-    UE_LOG(LogTemp, Log, TEXT("[%s]"), *posePair.Key);
-    UE_LOG(LogTemp, Log, TEXT("[%s]"), *posePair.Value.ToString());
+    UE_LOG(LogTemp, Log, TEXT("Key: [%s]"), *posePair.Key);
+    UE_LOG(LogTemp, Log, TEXT("Value: [%s]"), *posePair.Value.ToString());
     for(TActorIterator<ARGBDCamera> ActorItr(GetWorld()); ActorItr; ++ActorItr)
     {
       FROSBridgeMsgGeometrymsgsPoseStamped poseStamped;
@@ -60,10 +62,12 @@ void AMyFristROSActor::Tick(float DeltaTime)
       FVector trans(-poseStamped.GetPose().GetPosition().GetX() * 100 - 270,
                     poseStamped.GetPose().GetPosition().GetY() * 100 + 60,
                     poseStamped.GetPose().GetPosition().GetZ() * 100);
+      FQuat quat(-poseStamped.GetPose().GetOrientation().GetX(),poseStamped.GetPose().GetOrientation().GetY(),
+                 poseStamped.GetPose().GetOrientation().GetZ(),-poseStamped.GetPose().GetOrientation().GetW());
 
-      FQuat quat(poseStamped.GetPose().GetOrientation().GetX(), poseStamped.GetPose().GetOrientation().GetY(),
-                 poseStamped.GetPose().GetOrientation().GetZ(), poseStamped.GetPose().GetOrientation().GetW());
-      ActorItr->SetActorLocationAndRotation(trans, quat);
+      FRotator hack(90,90,0);//this seemed to work...why?
+      ActorItr->SetActorLocationAndRotation(trans, quat*hack.Quaternion());
+
     }
   }
 
@@ -85,17 +89,10 @@ void AMyFristROSActor::Tick(float DeltaTime)
         UE_LOG(LogTemp, Log, TEXT("Found actor with given name [%s]"), *actorName);
         FROSBridgeMsgGeometrymsgsPose pose = marker.GetPose();
                 FVector trans(-pose.GetPosition().GetX() * 100 - 260,
-                              pose.GetPosition().GetY() * 100 + 70,
+                              pose.GetPosition().GetY() * 100 + 60,
                               pose.GetPosition().GetZ() * 100);
-                FQuat quat(pose.GetOrientation().GetX(), -pose.GetOrientation().GetY(),
+                FQuat quat(-pose.GetOrientation().GetX(), pose.GetOrientation().GetY(),
                            pose.GetOrientation().GetZ(), -pose.GetOrientation().GetW());
-
-//        FVector trans(pose.GetPosition().GetX() * 100,
-//                      pose.GetPosition().GetY() * 100,
-//                      pose.GetPosition().GetZ() * 100);
-//        FQuat quat(pose.GetOrientation().GetX(), pose.GetOrientation().GetY(),
-//                   pose.GetOrientation().GetZ(), pose.GetOrientation().GetW());
-
 
         UE_LOG(LogTemp, Log, TEXT("Marker trans: %f %f %f"), trans[0], trans[1], trans[2]);
         ActorItr->SetActorLocationAndRotation(trans, quat);
