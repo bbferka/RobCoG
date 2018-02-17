@@ -9,7 +9,7 @@ public class RobCoG : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject","UnrealEd",
-		    "Engine", "InputCore","UROSBridge","URoboVision",
+		    "Engine", "InputCore","UROSBridge","URoboVision","UROSActorControl",
 		    "Json","JsonUtilities",});
 
 		// Uncomment if you are using Slate UI
